@@ -1,0 +1,74 @@
+{
+  "model_type": "random_forest",
+  "train_rows": 4988,
+  "val_rows": 1069,
+  "test_rows": 1069,
+  "train_date_range": [
+    "2025-01-01 00:29:00",
+    "2025-09-13 08:31:00"
+  ],
+  "val_date_range": [
+    "2025-09-13 08:32:00",
+    "2025-11-05 11:58:00"
+  ],
+  "test_date_range": [
+    "2025-11-05 12:50:00",
+    "2025-12-31 23:11:00"
+  ],
+  "validation_comparison": {
+    "baseline": {
+      "mae": 16.52,
+      "medae": 12.8,
+      "rmse": 22.64,
+      "r2": -0.0715
+    },
+    "linear": {
+      "mae": 17.0,
+      "medae": 14.81,
+      "rmse": 21.95,
+      "r2": -0.0077
+    },
+    "decision_tree": {
+      "mae": 16.87,
+      "medae": 14.1,
+      "rmse": 21.95,
+      "r2": -0.0071
+    },
+    "random_forest": {
+      "mae": 16.97,
+      "medae": 14.63,
+      "rmse": 21.95,
+      "r2": -0.0069
+    }
+  },
+  "test_metrics": {
+    "mae": 16.38,
+    "medae": 13.94,
+    "rmse": 21.27,
+    "r2": 0.0008
+  },
+  "baseline_test_metrics": {
+    "mae": 16.02,
+    "medae": 13.1,
+    "rmse": 21.68,
+    "r2": -0.038
+  },
+  "features": [
+    "incident_type",
+    "severity",
+    "reported_by",
+    "zone",
+    "road_type",
+    "road_condition",
+    "pedestrian_activity",
+    "injuries",
+    "near_school",
+    "near_hospital",
+    "population_density_per_km2",
+    "hour",
+    "day_of_week",
+    "month"
+  ],
+  "target": "resolution_hours",
+  "notes": "Chronological split used to simulate deployment. Model evaluated honestly; baseline comparison preserved in transparency report."
+}

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivicPulse AI | Smart City Hazard Prioritization & Dispatch Platform</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-icon">🏙️</div>
+      <div>CivicPulse AI <span class="brand-tag">DATATHON 2026</span></div>
+    </div>
+
+    <!-- Center Navigation Tabs -->
+    <nav class="nav-links">
+      <button class="nav-tab-btn active" data-target-view="citizen-view">
+        📢 Citizen Portal
+      </button>
+      <button class="nav-tab-btn" data-target-view="officer-view">
+        🏛️ Officer Command
+      </button>
+      <button class="nav-tab-btn" data-target-view="worker-view">
+        👷 Field Crew
+      </button>
+    </nav>
+
+    <!-- Role / Persona Switcher for Evaluators -->
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div class="persona-switch">
+        <button class="persona-btn active" data-persona="citizen">Citizen (Public)</button>
+        <button class="persona-btn" data-persona="officer">Officer</button>
+        <button class="persona-btn" data-persona="worker">Worker</button>
+      </div>
+
+      <div id="user-profile-header">
+        <button class="auth-btn" onclick="openLoginModal()">
+          🔐 Staff Login
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- ========================================================
+         VIEW 1: CITIZEN PORTAL (NO LOGIN REQUIRED)
+         ======================================================== -->
+    <section id="citizen-view" class="portal-view">
+      
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-pill">
+          <div class="pulse-dot"></div>
+          <span>LIVE SMART CITY DISPATCH ENGINE · 1,000 ACTIVE URBAN NODES</span>
+        </div>
+        <h1>Where Should We Fix First?<br><span>AI Citizen Hazard Reporting</span></h1>
+        <p>
+          Report civic infrastructure issues without creating an account. Our machine-learning model instantly classifies the grievance, evaluates casualty risk, and routes it to civil authorities in strict priority order.
+        </p>
+      </div>
+
+      <!-- Live KPI Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Monitored Grid</span>
+            <span class="stat-icon">🗺️</span>
+          </div>
+          <div class="stat-value">1,000</div>
+          <div class="stat-subtitle">Locations across 20 Zones</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Registered</span>
+            <span class="stat-icon">📋</span>
+          </div>
+          <div class="stat-value kpi-total-tickets">8,005</div>
+          <div class="stat-subtitle">Citizen 311 Grievances</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Pending Dispatch</span>
+            <span class="stat-icon">⏳</span>
+          </div>
+          <div class="stat-value kpi-pending-approval" style="color: #FBBF24;">4</div>
+          <div class="stat-subtitle">Awaiting Officer Review</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Critical Hazards</span>
+            <span class="stat-icon">🚨</span>
+          </div>
+          <div class="stat-value kpi-critical" style="color: #F87171;">2</div>
+          <div class="stat-subtitle">Score ≥ 85 / Urgent Corridor</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Avg Turnaround</span>
+            <span class="stat-icon">⚡</span>
+          </div>
+          <div class="stat-value kpi-avg-hours" style="color: #34D399;">16.5h</div>
+          <div class="stat-subtitle">Empirical Resolution Cycle</div>
+        </div>
+      </div>
+
+      <!-- Smart Complaint Submission Grid -->
+      <div class="form-grid">
+        
+        <!-- Left: Complaint Form -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📝 Report a Civil Hazard</h2>
+            <div class="card-desc">No login required. Fill out the details below to trigger automated ML assessment.</div>
+          </div>
+
+          <form id="complaint-form">
+            <!-- Description -->
+            <div class="form-group">
+              <label class="form-label" for="complaint-desc">Hazard Description</label>
+              <textarea 
+                id="complaint-desc" 
+                class="form-textarea" 
+                placeholder="Describe the issue (e.g. Massive pothole on collector road near hospital causing traffic delay)..."
+                required
+              >Massive 2-foot pothole outside school entrance causing severe vehicle damage and near collisions.</textarea>
+              
+              <div class="suggestion-pills">
+                <span style="font-size: 0.75rem; color: var(--text-muted); align-self: center;">Quick Test Samples:</span>
+                <button type="button" class="pill-btn" onclick="document.getElementById('complaint-desc').value='Massive 2-foot pothole outside school entrance causing severe vehicle damage and near collisions.'; runAnalysisPreview();">🕳️ School Pothole</button>
+                <button type="button" class="pill-btn" onclick="document.getElementById('complaint-desc').value='Stormwater drain clogged with black wastewater overflowing across three lanes after morning rain.'; runAnalysisPreview();">🌊 Overflowing Drain</button>
+                <button type="button" class="pill-btn" onclick="document.getElementById('complaint-desc').value='Traffic signal malfunctioning at junction - flashing irregular red and green simultaneously causing gridlock.'; runAnalysisPreview();">🚦 Broken Signal</button>
+                <button type="button" class="pill-btn" onclick="document.getElementById('complaint-desc').value='Five streetlights completely dead along pedestrian stretch behind municipal park. Pitch black at night.'; runAnalysisPreview();">💡 Dark Streetlight</button>
+              </div>
+            </div>
+
+            <!-- Location Selector -->
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+                <label class="form-label" style="margin-bottom: 0;" for="location-select">Incident Location</label>
+                <button type="button" class="pill-btn" style="color: var(--cyan-primary); border-color: rgba(6, 182, 212, 0.4);" onclick="simulateGPSLocation()">
+                  📡 Use My GPS (Simulate)
+                </button>
+              </div>
+              <select id="location-select" class="form-select">
+                <!-- Populated dynamically via JS -->
+              </select>
+
+              <div id="location-preview-box" class="location-preview-card">
+                <!-- Location details updated live -->
+              </div>
+            </div>
+
+            <!-- Urgency Level -->
+            <div class="form-group">
+              <label class="form-label">Perceived Hazard Urgency</label>
+              <div class="urgency-group">
+                <label class="urgency-option">
+                  <input type="radio" name="urgency" value="Standard" checked>
+                  <div class="urgency-box">
+                    <span>🟡 Standard</span>
+                    <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Normal queue</span>
+                  </div>
+                </label>
+
+                <label class="urgency-option">
+                  <input type="radio" name="urgency" value="Urgent">
+                  <div class="urgency-box">
+                    <span>🟠 Urgent</span>
+                    <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Transit risk</span>
+                  </div>
+                </label>
+
+                <label class="urgency-option life-hazard">
+                  <input type="radio" name="urgency" value="Life Hazard">
+                  <div class="urgency-box">
+                    <span>🔴 Life Hazard</span>
+                    <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Imminent danger</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Optional Contact -->
+            <div class="form-group">
+              <label class="form-label" for="complaint-contact">Citizen Contact (Optional for SMS / Email status tracking)</label>
+              <input type="text" id="complaint-contact" class="form-control" placeholder="Phone or email (e.g. 9876543210 or name@email.com)">
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn-submit">
+              ⚡ Submit Grievance & Route to City Officer
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Real-Time Machine Learning Assessment Box -->
+        <div class="ai-assessment-box">
+          <div class="ai-header">
+            <div class="ai-title">
+              <span>🤖</span> AI Diagnostic & Dispatch Assessment
+            </div>
+            <span class="ai-pill">Real-Time ML Pipeline</span>
+          </div>
+
+          <!-- Dynamic Priority Score -->
+          <div class="ai-score-row">
+            <div class="ai-score-block">
+              <div class="ai-score-title">MCDA Priority Score</div>
+              <div id="ai-score-val" class="ai-score-val" style="color: var(--cyan-primary);">96.5</div>
+              <div class="ai-progress-bar">
+                <div id="ai-score-bar" class="ai-progress-fill" style="width: 96.5%; background: var(--critical);"></div>
+              </div>
+            </div>
+
+            <div class="ai-score-block">
+              <div class="ai-score-title">Estimated Resolution</div>
+              <div id="ai-turnaround-val" class="ai-score-val" style="font-size: 1.6rem; color: #FFFFFF; padding-top: 0.25rem;">~14.5h</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">RandomForest Model</div>
+            </div>
+          </div>
+
+          <!-- Inferred Details -->
+          <div class="ai-details-list">
+            <div class="ai-detail-row">
+              <span class="ai-detail-label">Predicted Category</span>
+              <span id="ai-category-val" class="ai-detail-val">Road damage (94% conf)</span>
+            </div>
+
+            <div class="ai-detail-row">
+              <span class="ai-detail-label">Inferred Severity Tier</span>
+              <span id="ai-severity-val" class="badge-tier badge-tier-critical">Critical</span>
+            </div>
+
+            <div class="ai-detail-row">
+              <span class="ai-detail-label">Routing Authority</span>
+              <span class="ai-detail-val" style="color: #38BDF8;">Municipal Works & Civil Infrastructure</span>
+            </div>
+
+            <div class="ai-detail-row">
+              <span class="ai-detail-label">Officer Queue Position</span>
+              <span class="ai-detail-val" style="color: #F87171; font-weight: 700;">Top 1% Urgent Dispatch</span>
+            </div>
+          </div>
+
+          <!-- Explainable Rationale -->
+          <div class="ai-rationale-box">
+            <strong style="color: #FFFFFF;">AI Dispatch Justification:</strong>
+            <div id="ai-rationale-val" style="margin-top: 3px;">
+              Detected high-hazard life-safety keywords. Adjacent to school pedestrian zone and poor road condition.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Complaint Tracker Section -->
+      <div class="card" style="margin-top: 2.5rem;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 class="card-title">🔍 Track an Existing Grievance</h2>
+            <div class="card-desc">Enter your 10-digit ticket code to inspect live approval and field crew repair status.</div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="pill-btn" onclick="trackComplaintById('CP-2026-1001')">CP-2026-1001 (Pending)</button>
+            <button class="pill-btn" onclick="trackComplaintById('CP-2026-1003')">CP-2026-1003 (Approved)</button>
+            <button class="pill-btn" onclick="trackComplaintById('CP-2026-1004')">CP-2026-1004 (In Progress)</button>
+            <button class="pill-btn" onclick="trackComplaintById('CP-2026-1005')">CP-2026-1005 (Resolved)</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+          <input type="text" id="track-input" class="form-control" style="max-width: 400px;" placeholder="e.g. CP-2026-1001">
+          <button class="auth-btn" onclick="trackComplaintById()">Check Status</button>
+        </div>
+
+        <!-- Rendered Result Timeline Container -->
+        <div id="tracking-result-box" style="display: none; margin-top: 1.5rem;"></div>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================
+         VIEW 2: GOVERNMENT OFFICER PORTAL (LOGIN REQUIRED)
+         ======================================================== -->
+    <section id="officer-view" class="portal-view" style="display: none;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span class="badge-tier badge-tier-high" style="margin-bottom: 0.5rem;">CIVIL INFRASTRUCTURE COMMAND</span>
+          <h1>🏛️ Government Officer Dispatch Portal</h1>
+          <p style="color: var(--text-secondary); margin-top: 0.25rem;">
+            Review incoming citizen grievances sorted strictly in <strong>Priority Order</strong>. Approve and dispatch field maintenance crews.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="pill-btn" onclick="loadOfficerQueue('')">All Tickets</button>
+          <button class="pill-btn" style="color: #FBBF24; border-color: rgba(245, 158, 11, 0.4);" onclick="loadOfficerQueue('Pending Approval')">Pending Review</button>
+          <button class="pill-btn" style="color: #38BDF8; border-color: rgba(6, 182, 212, 0.4);" onclick="loadOfficerQueue('Approved')">Dispatched</button>
+          <button class="pill-btn" style="color: #34D399; border-color: rgba(16, 185, 129, 0.4);" onclick="loadOfficerQueue('Resolved')">Resolved</button>
+        </div>
+      </div>
+
+      <!-- Officer KPI Strip -->
+      <div class="stats-grid" style="margin-bottom: 1.75rem;">
+        <div class="stat-card">
+          <div class="stat-title">Awaiting Approval</div>
+          <div class="stat-value kpi-pending-approval" style="color: #FBBF24;">4</div>
+          <div class="stat-subtitle">Requires officer authorization</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-title">Active Work Orders</div>
+          <div class="stat-value kpi-in-progress" style="color: #C084FC;">2</div>
+          <div class="stat-subtitle">Crews deployed in field</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-title">Resolved Today</div>
+          <div class="stat-value kpi-resolved" style="color: #34D399;">1</div>
+          <div class="stat-subtitle">Completed by field units</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-title">Average Turnaround</div>
+          <div class="stat-value kpi-avg-hours" style="color: #38BDF8;">16.5h</div>
+          <div class="stat-subtitle">SLA target: 24.0h</div>
+        </div>
+      </div>
+
+      <!-- Prioritized Queue Table -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">🎯 Prioritized Action Queue (MCDA Scored)</h2>
+          <div class="card-desc">Ranked deterministically by casualty burden, active complaints, and facility vulnerability.</div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Priority Score</th>
+                <th>Ticket ID</th>
+                <th>Category & Narrative</th>
+                <th>Location & Context</th>
+                <th>Status</th>
+                <th>Estimated Time</th>
+                <th>Officer Action</th>
+              </tr>
+            </thead>
+            <tbody id="officer-queue-table-body">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================
+         VIEW 3: FIELD CREW WORKER PORTAL (LOGIN REQUIRED)
+         ======================================================== -->
+    <section id="worker-view" class="portal-view" style="display: none;">
+      
+      <div style="margin-bottom: 1.5rem;">
+        <span class="badge-tier badge-tier-routine" style="margin-bottom: 0.5rem;">FIELD CREW DISPATCH CONSOLE</span>
+        <h1>👷 Field Maintenance Crew Portal</h1>
+        <p style="color: var(--text-secondary); margin-top: 0.25rem;">
+          View authorized work orders assigned to your squad in priority order. Log repair progress and mark hazards resolved.
+        </p>
+      </div>
+
+      <!-- Worker Tasks List -->
+      <div id="worker-tasks-list">
+        <!-- Rendered dynamically via JS -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================
+       MODAL 1: SUBMISSION SUCCESS (CITIZEN TICKET ID)
+       ======================================================== -->
+  <div id="success-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close-btn">&times;</button>
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+        <h2>Hazard Registered Successfully!</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">
+          Your complaint has been automatically assessed and prioritized in the municipal dispatch queue.
+        </p>
+      </div>
+
+      <div style="background: rgba(6, 182, 212, 0.08); border: 1px dashed var(--cyan-primary); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; margin-bottom: 1.5rem;">
+        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Your Tracking Ticket ID</div>
+        <div id="modal-ticket-id" style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: #FFFFFF; margin: 4px 0;">CP-2026-XXXX</div>
+        <div style="font-size: 0.8rem; color: var(--cyan-primary);">Save this code to check repair status at any time.</div>
+      </div>
+
+      <div class="ai-details-list" style="margin-bottom: 1.5rem;">
+        <div class="ai-detail-row">
+          <span class="ai-detail-label">Predicted Category</span>
+          <span id="modal-ticket-category" class="ai-detail-val">Road damage</span>
+        </div>
+        <div class="ai-detail-row">
+          <span class="ai-detail-label">Assessed Severity</span>
+          <span id="modal-ticket-severity" class="ai-detail-val">High</span>
+        </div>
+        <div class="ai-detail-row">
+          <span class="ai-detail-label">Calculated Priority</span>
+          <span id="modal-ticket-priority" class="ai-detail-val">92.0 / 100</span>
+        </div>
+        <div class="ai-detail-row">
+          <span class="ai-detail-label">Estimated Turnaround</span>
+          <span id="modal-ticket-eta" class="ai-detail-val">~16.0 hours</span>
+        </div>
+      </div>
+
+      <button class="btn-submit btn-modal-close" onclick="trackComplaintById(document.getElementById('modal-ticket-id').textContent)">
+        🔍 Track This Complaint in Real Time
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       MODAL 2: OFFICER APPROVAL & DISPATCH
+       ======================================================== -->
+  <div id="approval-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close-btn">&times;</button>
+      <div class="card-header">
+        <span class="badge-status status-pending">PENDING AUTHORIZATION</span>
+        <h2 id="approve-ticket-id" style="margin-top: 0.5rem; font-size: 1.4rem;">CP-2026-XXXX</h2>
+        <div id="approve-location" style="color: var(--text-secondary); font-size: 0.88rem;">Location Node</div>
+      </div>
+
+      <div style="background: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+        <div style="font-size: 0.78rem; color: var(--text-muted);">CITIZEN NARRATIVE:</div>
+        <div id="approve-desc" style="color: #FFFFFF; font-size: 0.95rem; margin-top: 2px;">Hazard Description</div>
+      </div>
+
+      <div class="ai-details-list" style="margin-bottom: 1.25rem;">
+        <div class="ai-detail-row">
+          <span class="ai-detail-label">ML Category</span>
+          <span id="approve-category" class="ai-detail-val">Road damage</span>
+        </div>
+        <div class="ai-detail-row">
+          <span class="ai-detail-label">MCDA Priority Score</span>
+          <span id="approve-score" class="ai-detail-val" style="color: var(--cyan-primary);">96.5</span>
+        </div>
+        <div class="ai-detail-row">
+          <span class="ai-detail-label">Context Rationale</span>
+          <span id="approve-rationale" class="ai-detail-val" style="font-size: 0.8rem; max-width: 280px; text-align: right;">Rationale</span>
+        </div>
+      </div>
+
+      <!-- Assignment Controls -->
+      <div class="form-group">
+        <label class="form-label" for="worker-select">Assign to Dedicated Field Unit / Crew</label>
+        <select id="worker-select" class="form-select">
+          <!-- Populated dynamically via JS -->
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+        <button id="confirm-approve-btn" class="btn-submit" style="margin-top: 0; flex: 1;">
+          ✅ Authorize & Dispatch Work Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       MODAL 3: WORKER RESOLUTION NOTES
+       ======================================================== -->
+  <div id="resolve-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close-btn">&times;</button>
+      <h2>✅ Complete Repair & Close Work Order</h2>
+      <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem;">
+        Record the resolution actions taken for ticket <strong id="resolve-ticket-id"></strong>.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label" for="resolve-notes">Work Execution Summary / Field Notes</label>
+        <textarea id="resolve-notes" class="form-textarea" placeholder="e.g. Cleared 15m of clogged drainage; tested water flow at 50L/min. Area sanitized."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="resolve-hours">Actual Hours Spent on Site</label>
+        <input type="number" id="resolve-hours" class="form-control" value="2.5" step="0.5" min="0.5" max="48.0">
+      </div>
+
+      <button id="confirm-resolve-btn" class="btn-submit" style="margin-top: 1rem;">
+        🎉 Submit & Mark Hazard Resolved
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       MODAL 4: STAFF LOGIN (OFFICER & WORKER)
+       ======================================================== -->
+  <div id="login-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 480px;">
+      <button class="modal-close-btn">&times;</button>
+      <h2>🔐 Municipal Staff Authentication</h2>
+      <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.25rem;">
+        Login to access the Government Officer Command Queue or Field Crew Console.
+      </p>
+
+      <!-- Evaluator 1-Click Demo Buttons -->
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem;">
+        <div style="font-size: 0.8rem; color: var(--cyan-primary); font-weight: 700; margin-bottom: 0.5rem;">⚡ 1-CLICK DEMO LOGINS FOR EVALUATORS:</div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button type="button" class="pill-btn" onclick="document.getElementById('login-email').value='officer@smartcity.gov'; document.getElementById('login-password').value='password123';">
+            🏛️ Officer Sharma
+          </button>
+          <button type="button" class="pill-btn" onclick="document.getElementById('login-email').value='worker@smartcity.gov'; document.getElementById('login-password').value='password123';">
+            👷 Crew Lead Vikram
+          </button>
+          <button type="button" class="pill-btn" onclick="document.getElementById('login-email').value='electrical@smartcity.gov'; document.getElementById('login-password').value='password123';">
+            🚦 Signals Crew Anil
+          </button>
+        </div>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Staff Email Address</label>
+          <input type="email" id="login-email" class="form-control" value="officer@smartcity.gov" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-control" value="password123" required>
+        </div>
+
+        <button type="submit" class="btn-submit" style="margin-top: 1rem;">
+          Sign In to Portal
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Main JS -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
